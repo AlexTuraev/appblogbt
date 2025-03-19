@@ -1,7 +1,9 @@
--- ---------------------------------- --
+-- liquibase formatted sql
+
+-- changeset alex turaev:1
 drop table if exists comment;
 drop table if exists post;
--- ---------------------------------- --
+
 create table if not exists post(
                                    id bigserial primary key,
                                    title varchar(256) not null,
