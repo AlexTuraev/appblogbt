@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog's articles</title>
+    <style>
+        html * {
+            margin: 0;
+            padding: 0;
+            color: black;
+        }
+        ul, li{
+            list-style: none;
+        }
+        body{
+            width: 1200px;
+            margin: 0 auto 0;
+        }
+        .section{
+        }
+        .article{
+            width: 1200px;
+            padding: 10px 0 15px;
+            overflow: hidden;
+        }
+        .article__title{
+            font-size: 25px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .article__div-img{
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            height: 150px;
+            margin-bottom: 15px;
+        }
+        .article__div-img__img{
+            width: 400px;
+            height: 100%;
+            border: black dotted 1px;
+        }
+        .article__content{
+            width: 100%;
+            margin-top: 15px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .article__footer{
+            margin-top: 10px;
+            display: flex;
+        }
+        .article__actions-div{
+            display: flex;
+            justify-content: space-between;
+        }
+        .article__input-comment{
+            font-size: 20px;
+            width: 300px;
+        }
+        .artile__comments{
+            margin-top: 25px;
+            max-height: 300px;
+            overflow: auto;
+        }
+        .article__single-comment{
+            margin: 5px auto 5px;
+        }
+        .article__edit-delete{
+        }
+        .article__element__input,
+        .article__element__input:active,
+        .article__element__input:focus
+        {
+            font-size: 20px;
+            width: 80%;
+            outline: 0;
+            border: none;
+            border-bottom: 1px solid black;
+        }
+        .btn{
+            font-size: 20px;
+            padding: 5px 30px;
+            border-radius: 10px;
+        }
+        .btn:hover{
+            background: aquamarine;
+        }
+        .a-main{
+            float: right;
+            color: blue;
+        }
+        .a-main:hover{
+            font-weight: bold;
+        }
+        .artile__comments li{
+            margin: 10px auto 30px;
+            border-bottom: 1px gray dotted;
+        }
+    </style>
+</head>
+
+<body>
+    <p>
+        <a th:href="@{/blog}">
+            <span class="a-main">НА ГЛАВНУЮ &cudarrr;</span>
+        </a>
+    </p>
+    <header class="header">Страница поста</header>
+    <section class="section" id="main-section">
+        <article class=" article">
+            <div class="article__title" th:text="${post.title}"/>
+
+            <div class="article__div-img">
+                <img class="article__div-img__img" th:src="${post.base64Image}" alt="some picture">
+            </div>
+
+            <div class="article__content">
+                <span th:text="${post.content}"></span>
+            </div>
+
+            <div class="article__content">
+                <span th:text="'Теги: ' + ${post.tags}"></span>
+            </div>
+
+            <div class="article__footer">
+                <form th:action="@{/blog/{id}/like(id=${post.id})}" method="post">
+                    <button name="like" value="true">&#x1F44D;</button>
+                    <span th:text="${post.countLike}"></span>
+                    <button name="like" value="false">&#128078;</button>
+                </form>
+            </div>
+        </article>
+
+        <div class="article__actions-div">
+            <div>
+                <form th:action="@{/blog/comment}" method="post">
+                    <input type="hidden" name="postId" th:value="${post.id}" >
+                    <input class="article__input-comment" name="content">
+                    <button class="btn" type="submit">Добавить комментарий</button>
+                </form>
+            </div>
+            <div>
+                <form th:action="@{/blog/{id}/geteditpostpage(id=${post.id})}" method="post">
+                    <button class="btn" type="submit">Редактировать</button>
+                </form>
+            </div>
+            <div>
+                <form th:action="@{/blog/{id}(id=${post.id})}" method="post">
+                    <input type="hidden" name="_method" value="delete">
+                    <button class="btn" type="submit">Удалить пост</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="artile__comments">
+            <h3>Комментарии:</h3>
+            <ul>
+                <li th:each="comment : ${comments}">
+                    <div class="article__edit-delete">
+                        <form th:action="@{/blog/comment/{id}(id=${comment.id})}" method="post">
+                            <input type="hidden" name="_method" value="delete">
+                            <input type="hidden" name="postId" th:value="${post.id}">
+                            <button style="color: red;" title="Удалить" type="submit">&#10008;</button>
+                        </form>
+                    </div>
+
+                    <div th:id="'spanCommentContent' + ${comment.id}" class="article__single-comment">
+                        <span th:text="${comment.content}"></span>
+                    </div>
+
+                    <div th:id="'editBtn' + ${comment.id}" class="article__edit-delete">
+                        <button style="color: blue;" title="Редактировать" th:value="${comment.id}" onclick="editComment(this.value)">&#9998;</button>
+                    </div>
+
+                    <div th:id="'editForm' + ${comment.id}" class="article__edit-delete" style="display: none">
+                        <form th:action="@{/blog/comment/{id}(id=${comment.id})}" method="post">
+                            <input type="hidden" name="_method" value="put">
+                            <input type="hidden" name="postId" th:value="${post.id}">
+                            <input class="article__element__input" th:value="${comment.content}" name="content" required><br>
+                            <button style="color: blue;" title="Сохранить" type="submit">&#10004;</button>
+                        </form>
+                    </div>
+
+                </li>
+            </ul>
+        </div>
+
+    </section>
+
+    <script>
+        function editComment(commentId) {
+            const formEditComment = document.getElementById('editForm' + commentId);
+            const editBtn = document.getElementById('editBtn' + commentId);
+            const spanComment = document.getElementById('spanCommentContent' + commentId);
+
+            formEditComment.style.display = 'block';
+            editBtn.style.display = 'none';
+            spanComment.style.display = 'none';
+        }
+    </script>
+</body>
+
+</html>

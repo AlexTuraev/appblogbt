@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog's articles</title>
+    <style>
+        html *{
+            margin: 0;
+            padding: 0;
+            color: black;
+        }
+        body{
+            width: 1200px;
+            margin: 0 auto 0;
+        }
+        .form-wrapper{
+        }
+        .form-wrapper__title{
+            font: bold 25px Arial, sans-serif;
+        }
+        .form-wrapper__element{
+            margin: 10px auto 30px;
+        }
+        .form-wrapper__element__input,
+        .form-wrapper__element__input:active,
+        .form-wrapper__element__input:focus
+        {
+            font-size: 20px;
+            width: 80%;
+            outline: 0;
+            border: none;
+            border-bottom: 1px solid black;
+        }
+        .a-main{
+            float: right;
+            color: blue;
+        }
+        .a-main:hover{
+            font-weight: bold;
+        }
+        .btn{
+            font-size: 20px;
+            padding: 5px 30px;
+            border-radius: 10px;
+        }
+        .btn:hover{
+            background: aquamarine;
+        }
+    </style>
+</head>
+
+<body>
+<p>
+    <a th:href="@{/blog}">
+        <span class="a-main">НА ГЛАВНУЮ БЕЗ СОХРАНЕНИЯ &cudarrr;</span>
+    </a>
+</p>
+<div class="form-wrapper" id="addPostForm">
+    <form th:action="@{/blog}" method="post" enctype="multipart/form-data">
+        <header class="form-wrapper__element">
+            <span class="form-wrapper__title">Редактировать статью</span>
+        </header>
+        <input type="hidden" name="id" th:value="${post.id}">
+        <div class="form-wrapper__element">
+            <label for="title">Название поста:</label><br>
+            <input class="form-wrapper__element__input" th:value="${post.title}" type="text" id="title" name="title" required>
+        </div>
+
+        <div class="form-wrapper__element">
+            <label for="content">Текст поста:</label><br>
+            <textarea rows="10" class="form-wrapper__element__input" th:text="${post.content}" id="content" name="content" required></textarea>
+        </div>
+
+        <div class="form-wrapper__element">
+            <label for="tag">Теги поста:</label><br>
+            <input class="form-wrapper__element__input" th:value="${post.tags}" type="text" id="tag" name="tags" required>
+        </div>
+
+        <div class="form-wrapper__element">
+            <label for="image">Новая картинка:</label>
+            <input type="file" id="image" accept="image/*" name="file">
+        </div>
+
+        <button class="form-wrapper__element btn" type="submit">Сохранить</button>
+    </form>
+</div>
+</body>
+</html>
