@@ -12,6 +12,9 @@ create table if not exists post(
     image bytea
     );
 
+insert into post(title, content, tags, count_like) values ('title1', 'content1', 'tag1', 10);
+insert into post(title, content, tags, count_like) values ('title2', 'content2', 'tag1', 8);
+insert into post(title, content, tags, count_like) values ('title3', 'content3', 'tag2', 5);
 
 create table if not exists comment(
                                       id bigserial primary key,
