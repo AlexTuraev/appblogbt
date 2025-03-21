@@ -17,25 +17,35 @@ configurations {
     compileOnly {
         extendsFrom annotationProcessor
     }
+    dev
 }
 
 repositories {
     mavenCentral()
 }
 
+//def activeProfile = System.getProperty('spring.profiles.active', 'test')
+
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.liquibase:liquibase-core'
+    dev 'org.liquibase:liquibase-core'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     runtimeOnly 'org.postgresql:postgresql'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-//    testImplementation 'com.h2database:h2'
+    testImplementation 'com.h2database:h2'
+
+
+//    if(activeProfile ==  'dev'){
+//        implementation 'org.liquibase:liquibase-core'
+//    }else if(activeProfile== 'test'){
+//        testImplementation 'com.h2database:h2'
+//    }
 
 
 
